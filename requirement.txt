@@ -1,0 +1,12 @@
+asgiref
+backports.zoneinfo
+Django>3.2<3.3
+sqlparse
+typing-extensions
+tzdata
+pillow
+django-extensions
+django-taggit
+django-summernote
+django-simple-captcha
+django-multi-captcha-admin

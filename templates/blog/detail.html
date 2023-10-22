@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load blog_tags %}
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-dark p-5">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-4 text-white">Blog Detail</h1>
+                <a href="">Home</a>
+                <i class="far fa-square text-primary px-2"></i>
+                <a href="">Blog Detail</a>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Blog Start -->
+    <div class="container-fluid py-6 px-5">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                {% for post in posts %}
+                <!-- Blog Detail Start -->
+                <div class="mb-5">
+                    <img class="img-fluid w-100 mb-5" src="{{post.image.url}}" alt="">
+                    <h1 class="mb-4">{{post.title}}</h1>
+                    <p>{{post.content}}</p>
+                </div>
+                <!-- Blog Detail End -->
+
+                <!-- Comment List Start -->
+                {% for comment in comments %}
+                <div class="mb-5">
+                    <h2 class="mb-4"> Comments</h2>
+                    <div class="d-flex mb-4">
+                        <img src="{% static 'img/user.jpg' %}" class="img-fluid rounded-circle" style="width: 45px; height: 45px;">
+                        <div class="ps-3">
+                            <h6><a href="">{{comment.name}}</a> <small><i>{{comment.created_date|date:"d/M/Y"}}</i></small></h6>
+                            <p>{{comment.message}}</p>
+                            <button class="btn btn-sm btn-light">Reply</button>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+				<p>no commets here be the first one to tell your thoughts</p>
+
+
+                {% endfor %}
+                <!-- Comment List End -->
+
+                <!-- Comment Form Start -->
+                <div class="bg-secondary p-5">
+                    <h2 class="mb-4">Leave a comment</h2>
+                    <form method="post" action="{% url 'blog:detail' %}">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <input type="submit" value="Submit">
+                    </form>
+                    {% if messages %}
+						<ul class="messages">
+							{% for message in messages %}
+							<li {% if message.tags %} class="{{message.tags}}"{% endif %}>{{message}}
+
+							</li>
+							{% endfor %}
+						</ul>
+						{% endif %}
+
+						{% if form.errors %}
+					<div class="alert alert-error">
+						<h4>please fix the following errors</h4>
+						<ul>
+							{% for field in form %}
+							  {% if field.errors %}
+							    {% for error in field.errors %}
+								  <li><a href="#id_{{field.name}}"class="error">{{error|escape}}</a></li>
+								{% endfor %}
+							   {% endif %}
+							{% endfor %}	
+						</ul>
+						{% if form.non_field_errors %}
+						  {{form.non_field_errors}}
+						{% endif %}
+					</div>
+					{% endif %}
+                </div>
+                <!-- Comment Form End -->
+            </div>
+            {% endfor %}
+
+            <!-- Sidebar Start -->
+            <div class="col-lg-4">
+                {% include 'blog/blog-search.html' %}
+                {% include 'blog/blog-post-categories.html' %}
+                {% latestposts %}
+
+                <!-- Image End -->
+                {% include 'blog/blog-tags.html' %}
+                <!-- Plain Text Start -->
+                <div>
+                    <h2 class="mb-4">Plain Text</h2>
+                    <div class="bg-secondary text-center" style="padding: 30px;">
+                        <p>Vero sea et accusam justo dolor accusam lorem consetetur, dolores sit amet sit dolor clita kasd justo, diam accusam no sea ut tempor magna takimata, amet sit et diam dolor ipsum amet diam</p>
+                        <a href="" class="btn btn-primary rounded-pill py-2 px-4">Read More</a>
+                    </div>
+                </div>
+                <!-- Plain Text End -->
+            </div>
+            <!-- Sidebar End -->
+        </div>
+    </div>
+    <!-- Blog End -->
+
+{% endblock %}
